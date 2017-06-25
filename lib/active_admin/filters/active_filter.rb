@@ -26,11 +26,19 @@ module ActiveAdmin
       end
 
       def label
+        translated_predicate = predicate_name.mb_chars.downcase.to_s
         if related_class
-          "#{related_class.model_name.human} #{predicate_name}".strip
+          "#{related_class.model_name.human} #{translated_predicate}".strip
         else
-          "#{attribute_name} #{predicate_name}".strip
+          "#{attribute_name} #{translated_predicate}".strip
         end
+      end
+
+      # translated active admins predicated equals, contains, starts_with ..
+      # with fallback to ransack eq, cont, start ...
+      def predicate_name
+        key = condition.predicate.name
+        I18n.t("active_admin.filters.predicates.#{key}", default: Ransack::Translate.predicate(key))
       end
 
       def html_options
@@ -54,11 +62,6 @@ module ActiveAdmin
 
       def name
         condition_attribute.attr_name
-      end
-
-      # translated predicated (equals, contains, etc)
-      def predicate_name
-        Ransack::Translate.predicate(condition.predicate.name)
       end
 
       # detect related class for Ransack::Nodes::Attribute
