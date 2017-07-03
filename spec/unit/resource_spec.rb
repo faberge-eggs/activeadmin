@@ -151,6 +151,9 @@ module ActiveAdmin
           it "should return nil value" do
             expect(@resource.controller.new.send(:method_for_association_chain)).to eq nil
           end
+          it "a build method for a new record should be :new" do
+            expect(@resource.controller.new.send(:method_for_build)).to eq :new
+          end
         end
         context "when passing in the method and using a block" do
           before do
@@ -160,6 +163,9 @@ module ActiveAdmin
           end
           it "should return the method from the option" do
             expect(@resource.controller.new.send(:method_for_association_chain)).to eq 'posts'
+          end
+          it "a build method for a new record should be :build" do
+            expect(@resource.controller.new.send(:method_for_build)).to eq :build
           end
         end
       end
